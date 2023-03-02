@@ -23,3 +23,11 @@ pip install python-telegram-bot --upgrade
 pip install openai --upgrade
 ```
 
+Run it in tmux or in the background:
+```
+python bot.py
+```
+
+Try to talk with the bot created by botfather.
+
+
