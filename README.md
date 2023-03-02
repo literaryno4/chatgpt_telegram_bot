@@ -3,9 +3,15 @@ A telegram bot that can talk with you like chatGPT.
 
 Before run this demo:
 
-- Get [openai key](https://platform.openai.com/account/api-keys).
+- Get [openai key](https://platform.openai.com/account/api-keys) and export in your environment:
+```
+export MY_OPENAI_API_KEY="your key here"
+```
 
-- Get [telegram bot token](https://core.telegram.org/bots#how-do-i-create-a-bot) with botfather.
+- Get [telegram bot token](https://core.telegram.org/bots#how-do-i-create-a-bot) with botfather and export it in your evnironment:
+```
+export MY_BOT_TOKEN="your token here"
+```
 
 - python version > 3.7
 
