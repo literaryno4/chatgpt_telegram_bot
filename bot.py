@@ -32,6 +32,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
 async def clear_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    global messages
     messages = [default_message]
     await update.message.reply_text("Let's begin a new topic...\n\n")
 
