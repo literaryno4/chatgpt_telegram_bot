@@ -33,6 +33,7 @@ logit_bias = None # a map
 user = None # string
 
 continuity = True
+markdown_on = False
 
 def do_config(assistant: str):
     global messages, system_message, temperature, continuity
@@ -43,6 +44,23 @@ def do_config(assistant: str):
     messages = [system_message]
 
     return config[assistant]["preface"]
+
+def markdown_message(message):
+    return "```\n" + message + "\n```"
+
+async def reply_line(update: Update, message: str):
+    global markdown_on
+    # in case of empty message
+    if message.strip() == '' or message.strip() == '\n':
+        return
+    if message[:3] == '```':
+        markdown_on = not markdown_on
+        await update.message.reply_text(message)
+        return
+    if markdown_on or message[0] == ' ':
+        await update.message.reply_markdown_v2(markdown_message(message))
+    else:
+        await update.message.reply_text(message)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.effective_user
@@ -72,18 +90,33 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         model="gpt-3.5-turbo", 
         messages=messages,
         temperature=temperature,
+        stream=True
     )
 
-    response_message = response['choices'][0]['message']
+    reply_message = ''
+    response_message = ''
+    response_role = ''
+    for chunk in response:
+        d = chunk['choices'][0]['delta']
+        if 'role' in d:
+            response_role = d['role']
+        if 'content' in d:
+            cm = d['content']
+            reply_message += cm
+            if reply_message[-1] == '\n':
+                # reply
+                await reply_line(update, reply_message)
+                reply_message = ''
+            response_message += cm
+    await reply_line(update, reply_message)
 
     # for saving tokens reason, reset conversation if more than 15 turns of talk.
-    if len(messages) > 30 or (not continuity):
+    if len(messages) > 15*2 or (not continuity):
         messages = [system_message]
     else:
         # save conversation
-        messages.append({"role": response_message['role'], "content": response_message['content']})
+        messages.append({"role": response_role, "content": response_message})
 
-    await update.message.reply_text(response_message['content'])
 
 def main() -> None:
 
