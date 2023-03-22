@@ -1,6 +1,9 @@
 # chatgpt_telegram_bot
 A telegram bot that can talk with you like chatGPT.
 
+Now it support generate content streamly(line by line actually):
+![](./images/stream_bot.gif)
+
 Before run this demo:
 
 - Get [openai key](https://platform.openai.com/account/api-keys) and export in your environment:
@@ -30,6 +33,6 @@ python bot.py
 
 Try to talk with the bot created by botfather.
 
-![](demo.png)
+![](./images/demo.png)
 
 
