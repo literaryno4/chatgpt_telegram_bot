@@ -73,8 +73,12 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text("Supported command:\n\n \
     /help this message\n\n \
     /clear restore general purpose assistant\n\n \
+    /eteacher talk with your English teacher\n\n \
     /ppolish 中文论文修改器\n\n \
     ")
+
+async def eteacher_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(do_config("english_teacher"))
 
 async def ppolish_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(do_config("paper_polisher"))
@@ -83,7 +87,6 @@ async def clear_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     await update.message.reply_text(do_config("general_assistant"))
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Echo the user message."""
     global messages
     messages.append({"role": "user", "content": update.message.text})
     response = openai.ChatCompletion.create(
@@ -129,6 +132,7 @@ def main() -> None:
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("clear", clear_command))
     application.add_handler(CommandHandler("ppolish", ppolish_command))
+    application.add_handler(CommandHandler("eteacher", eteacher_command))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
 
     # Run the bot until the user presses Ctrl-C
